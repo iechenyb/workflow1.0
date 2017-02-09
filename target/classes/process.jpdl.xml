@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="AsyncActivity" xmlns="http://jbpm.org/4.4/jpdl">
+
+    <start g="129,111,80,40" name="start">
+      <transition to="a"/>
+    </start>
+
+    <end g="532,293,80,40" name="end"/>
+   <task g="233,129,92,52" name="a">
+      <transition to="b"/>
+   </task>
+   <task g="298,235,93,51" name="b">
+      <transition to="c"/>
+   </task>
+   <task g="488,167,55,57" name="c">
+      <transition to="end"/>
+   </task>
+
+</process>

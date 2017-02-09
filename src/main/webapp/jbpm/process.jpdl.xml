@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="draw_key" name="draw" xmlns="http://jbpm.org/4.4/jpdl">
+
+    <start g="88,545,80,40" name="start">
+      <transition g="-79,-22" name="to exclusive1" to="准备分拣"/>
+    </start>
+
+    <end g="1115,525,80,40" name="end"/>
+   <task assignee="chenyb" g="640,25,92,52" name="优质">
+      <transition to="再加工"/>
+   </task>
+   <task assignee="chenyb" g="913,12,93,51" name="再加工">
+      <transition to="装箱"/>
+   </task>
+   <task assignee="chenyb" g="1104,65,55,57" name="装箱">
+      <transition to="end"/>
+   </task>
+   <decision g="63,26,66,49" name="exclusive1">
+      <transition g="217,52:-28,-22" name="to good" to="优质">
+        <condition expr="#{content=='good'}"/>
+      </transition>
+      <transition g="-29,-22" name="to bad" to=" 一般">
+      <condition expr="#{content=='bad'}"/>
+      </transition>
+      <transition g="-29,-22" name="to giveup" to=" 不合格">
+       <condition expr="#{content=='giveup'}"/>
+      </transition>
+   </decision>
+   <task assignee="chenyb" g="462,154,96,49" name=" 一般">
+      <transition g="-35,-8" name="to exclusive2" to="exclusive2"/>
+   </task>
+   <task assignee="chenyb" g="821,377,82,52" name="重新制作">
+      <transition g="-79,-22" name="to exclusive3" to="exclusive3"/>
+   </task>
+   <task assignee="chenyb" g="957,283,66,54" name="精加工">
+      <transition g="-43,-22" name="to end" to="end"/>
+   </task>
+   <task assignee="chenyb" g="297,271,76,52" name=" 不合格">
+      <transition g="-28,-22" name="to e" to="重新制作"/>
+   </task>
+   <decision g="750,167,35,28" name="exclusive2">
+      <transition g="-25,-22" name="to f f" to="精加工">
+       <condition expr="#{content=='f'}"/>
+      </transition>
+      <transition g="-29,-22" name="to b b" to="再加工">
+       <condition expr="#{content=='b'}"/>
+      </transition>
+      <transition g="-28,-22" name="to e e" to="重新制作">
+        <condition expr="#{content=='e'}"/>
+      </transition>
+   </decision>
+   <task assignee="chenyb" g="289,390,93,57" name="准备分拣">
+      <transition g="-79,-22" name="to exclusive1" to="exclusive1"/>
+   </task>
+   <decision g="775,523,104,8" name="exclusive3">
+      <transition g="-43,-22" name="to end yes" to="end">
+       <condition expr="#{content=='yes'}"/>
+      </transition>
+      <transition g="-27,-22" name="to z no" to="准备分拣">
+       <condition expr="#{content=='no'}"/>
+      </transition>
+   </decision>
+
+</process>
