@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process key="decision" name="decision" xmlns="http://jbpm.org/4.4/jpdl">
+<start name="start1" g="22,200,48,48">
+<transition name="提交" to="exclusive1" g="-15,-20"/>
+</start>
+<decision name="exclusive1" g="185,201,48,48">
+<transition name="小于2天" to="组长" g="-49,-32">
+<condition expr="${days lt 2}"/>
+</transition>
+<transition name="大于2天,小于10" to="科长" g="-56,-28">
+<condition expr="${days ge 2 and days le 10}"/>
+</transition>
+<transition name="10天以上" to="主任" g="-47,-22">
+<condition expr="${days gt 10}"/>
+</transition>
+</decision>
+<task assignee="zuzhang" name="组长" g="338,69,92,52">
+<transition name="组长批准" to="归档" g="-51,-26"/>
+</task>
+<task assignee="kezhang" name="科长" g="342,199,92,52">
+<transition name="科长批准" to="归档" g="-49,-25"/>
+</task>
+<task assignee="zhuren" name="主任" g="349,325,92,52">
+<transition name="主任批准" to="归档" g="-41,-25"/>
+</task>
+<task assignee="caiwu" name="归档" g="531,201,92,52">
+<transition name="通过" to="end1" g="-35,-22"/>
+</task>
+<end name="end1" g="689,208,48,48"/>
+</process>

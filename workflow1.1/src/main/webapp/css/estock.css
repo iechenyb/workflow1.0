@@ -1,0 +1,85 @@
+.echart{
+    height:530px;
+    width:450;
+}
+@media only screen and(max-width:640px){
+   .echart1{
+    height:300px;
+    width:450;
+   }
+}
+.border{
+   border:1px solid gray
+  }
+.margin{
+  margin-top:10px;
+  margin-left:15px;
+}
+.block{
+	display:block;
+}
+.bottom0{
+	margin-bottom:0px;
+	padding-bottom:0px;
+}
+.redup{
+	position:fixed;
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px 0px;
+	background-repeat:no-repeat;
+}
+.reddown{
+	position:fixed;
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px -24px;
+	background-repeat:no-repeat;
+}
+.greenup{
+	position:fixed;
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px -48px;
+	background-repeat:no-repeat;
+}
+.greendown{
+	position:fixed;
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px -72px;
+	background-repeat:no-repeat;
+}
+.greendownauto{
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px -72px;
+	background-repeat:no-repeat;
+}
+.redupauto{
+	width:24px;
+	height:24px;
+	background-image:url("../img/arrow.png");
+	background-position:0px 0px;
+	background-repeat:no-repeat;
+}
+<!--推送服务提示灯-->
+.circlered {
+    background: none repeat scroll 0 0 #FF3300;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding:0px 10px;
+	margin-top:0px;
+}
+.circlegreen {
+    background: none repeat scroll 0 0 #663d77;
+    border-radius: 10px;
+    color: #FFFFFF;
+    padding:0px 10px;
+	margin-top:0px;
+}

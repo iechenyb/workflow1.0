@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="tom" xmlns="http://jbpm.org/4.4/jpdl">
+   <start g="47,22,111,40" name="start1">
+      <transition g="-32,-17" name="启动" to="task4"/>
+   </start>
+   <decision g="345,149,110,60" name="exclusive1">
+   <handler class="com.cyb.jbpm.FirstHandler" />
+      <transition g="-52,-22" name="toa" to="task1"/>
+      <transition g="-52,-22" name="tob" to="task2"/>
+      <transition g="-52,-22" name="toc" to="task3"/>
+   </decision>
+   <task assignee="chenyb" g="524,197,102,39" name="task1">
+      <transition g="-50,-22" name="top" to="end1"/>
+   </task>
+   <task assignee="chenyb" g="485,267,110,44" name="task2">
+      <transition g="-50,-22" name="toq" to="end1"/>
+   </task>
+   <task assignee="chenyb" g="432,90,92,52" name="task3">
+      <transition g="-15,-18" name="Exc表达式" to="exclusive2"/>
+   </task>
+   <end g="899,265,48,48" name="end1"/>
+   <task assignee="chenyb" g="179,68,92,52" name="task4">
+      <transition g="-32,-8" name="handler" to="exclusive1"/>
+   </task>
+   <decision name="exclusive2" g="590,100,48,48" expr="${content}">
+      <transition name="tod" to="task5" g="-52,-22"/>
+      <transition name="toe" to="task6" g="-26,-9"/>
+   </decision>
+   <task name="task5" g="850,82,92,52" assignee="chenyb">
+      <transition name="tog" to="end1" g="-10,-35"/>
+      <transition name="transConExp" to="exclusive3" g="-65,-5"/>
+   </task>
+   <task name="task6" g="703,154,85,44" assignee="chenyb">
+      <transition name="tom" to="end1" g="-37,-22"/>
+   </task>
+   <decision name="exclusive3" g="983,17,48,48">
+   <handler class="com.cyb.jbpm.FirstHandler" />
+      <transition name="tof" to="task4" g="-52,-22"/>
+      <transition name="toh" to="end1" g="2,-28"/>
+   </decision>
+</process>
