@@ -210,7 +210,6 @@ public class JpbmController {
 		}
 		return data_proc;
 	}
-	//流程定义模板
 	/**
 	 * 获取流程定义模板信息
 	 * @return

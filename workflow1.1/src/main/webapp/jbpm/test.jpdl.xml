@@ -23,20 +23,19 @@
    <task assignee="chenyb" g="179,68,92,52" name="task4">
       <transition g="-32,-8" name="handler" to="exclusive1"/>
    </task>
-   <decision name="exclusive2" g="590,100,48,48" expr="${content}">
-      <transition name="tod" to="task5" g="-52,-22"/>
-      <transition name="toe" to="task6" g="-26,-9"/>
+   <decision expr="${content}" g="590,100,48,48" name="exclusive2">
+      <transition g="-52,-22" name="tod" to="task5"/>
+      <transition g="-26,-9" name="toe" to="task6"/>
    </decision>
-   <task name="task5" g="850,82,92,52" assignee="chenyb">
-      <transition name="tog" to="end1" g="-10,-35"/>
-      <transition name="transConExp" to="exclusive3" g="-65,-5"/>
+   <task assignee="chenyb" g="850,82,92,52" name="task5">
+      <transition g="-65,-5" name="transConExp" to="exclusive3"/>
    </task>
-   <task name="task6" g="703,154,85,44" assignee="chenyb">
-      <transition name="tom" to="end1" g="-37,-22"/>
+   <task assignee="chenyb" g="703,154,85,44" name="task6">
+      <transition g="-37,-22" name="tom" to="end1"/>
    </task>
-   <decision name="exclusive3" g="983,17,48,48">
+   <decision g="983,17,48,48" name="exclusive3">
    <handler class="com.cyb.jbpm.FirstHandler" />
-      <transition name="tof" to="task4" g="-52,-22"/>
-      <transition name="toh" to="end1" g="2,-28"/>
+      <transition g="-52,-22" name="tofff" to="task4"/>
+      <transition g="2,-28" name="toh" to="end1"/>
    </decision>
 </process>
