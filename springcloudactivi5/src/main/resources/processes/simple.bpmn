@@ -1,15 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
   <process id="simple" name="simple" isExecutable="true">
-    <startEvent id="startevent1" name="Start">
+    <startEvent id="startevent1" name="开始">
       <extensionElements>
         <activiti:formProperty id="param1" name="param1" required="true">
           <activiti:value id="param1-1" name="param1-1"></activiti:value>
         </activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="usertask1" name="请假"></userTask>
-    <userTask id="usertask2" name="审批"></userTask>
+    <userTask id="usertask1" name="上级领导" activiti:assignee="sjld" activiti:candidateUsers="zhangsan,lisi">
+      <extensionElements>
+        <activiti:formProperty id="sjldid" name="sjldname" required="true">
+          <activiti:value id="id1" name="name1"></activiti:value>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
+    <userTask id="usertask2" name="公司领导" activiti:assignee="gsld" activiti:candidateUsers="wangwu,tiedan">
+      <extensionElements>
+        <activiti:formProperty id="gsldid" name="gsldname">
+          <activiti:value id="id2" name="name2"></activiti:value>
+        </activiti:formProperty>
+      </extensionElements>
+    </userTask>
     <endEvent id="endevent1" name="End">
       <extensionElements>
         <activiti:executionListener event="end" class="com.kiiik.listener.ProcessEndListener"></activiti:executionListener>

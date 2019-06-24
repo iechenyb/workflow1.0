@@ -5,7 +5,11 @@ import org.activiti.engine.delegate.ExecutionListener;
 
 import com.kiiik.pub.ProcessServiceImpl;
 import com.kiiik.utils.MyApplicationContextHandler;
-
+/**
+ * 流程结束是执行
+ * @author Administrator
+ *
+ */
 public class ProcessEndListener implements ExecutionListener {
 	
 	/**

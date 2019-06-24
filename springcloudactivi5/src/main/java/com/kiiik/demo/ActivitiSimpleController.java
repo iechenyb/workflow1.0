@@ -2,12 +2,16 @@ package com.kiiik.demo;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
 import org.activiti.engine.TaskService;
+import org.activiti.engine.form.FormProperty;
+import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
@@ -44,6 +48,55 @@ public class ActivitiSimpleController {
 		username = name;
 		return username;
 	}
+	
+	@RequestMapping("task/form/{taskId}")
+	@ResponseBody
+	public String taskForm(@PathVariable String taskId) {
+		TaskFormData tfd = activitProcessServiceImpl.getTaskFormData(taskId);
+		if(tfd == null) return null;
+		List<FormProperty> a = tfd.getFormProperties();
+		StringBuilder sb = new StringBuilder();
+		sb.append(tfd.getDeploymentId()+",")
+		.append(tfd.getFormKey()+",")
+		.append(tfd.getTask().getName()+",");
+		StringBuilder ps = new StringBuilder();
+		for(FormProperty p:a){
+			ps.append(p.getId()+"/"+p.getName()+"/"+p.getValue()+"/"+p.getClass()+"/"+p.getType()+",");
+		}
+		sb.append(ps.toString());
+		return sb.toString();
+	}
+	/**
+	 * 获取指定角色人员的任务
+	 * @param role
+	 * @return
+	 */
+	@RequestMapping("tasks/role/{role}")
+	@ResponseBody
+	public List<String> tasksByRole(@PathVariable String role) {
+		List<Task> tasks= activitProcessServiceImpl.getTaskListByRole(role);
+		List<String> tasksStr = new ArrayList<String>();
+		for(Task task:tasks){
+			tasksStr.add(task.getAssignee()+","+task.getName()+","+task.getFormKey()+","+task.getOwner());
+		}
+		return tasksStr;
+	}
+	/**
+	 * 候选人  执行
+	 * @param role
+	 * @return
+	 */
+	@RequestMapping("tasks/user/{user}")
+	@ResponseBody
+	public List<String> tasksByCondiUser(@PathVariable String user) {
+		List<Task> tasks= activitProcessServiceImpl.getTaskListByCandidateUser(user);
+		List<String> tasksStr = new ArrayList<String>();
+		for(Task task:tasks){
+			tasksStr.add(task.getAssignee()+","+task.getName()+","+task.getFormKey()+","+task.getOwner());
+		}
+		return tasksStr;
+	}
+	
 
 	/**
 	 * http://localhost:9999/demo/activiti/test/start
@@ -62,7 +115,7 @@ public class ActivitiSimpleController {
 		String processId = pi.getId();
 		String result = "流程创建成功，当前流程实例ID：" + processId + ",deploymentid=" + deployment.getId();
 		System.out.println(result);
-		return result;
+		return result+"["+deployment.getId()+"/"+processId+"]";
 	}
 
 	//获取流程意见
@@ -96,18 +149,19 @@ public class ActivitiSimpleController {
 		        String comment = (String) taskService.getVariable(taskId, "请假原因");
 		        System.out.println("请假天数:" + days + "\n 请假日期:" + date + "\n 请假原因:" + comment);
 		        /** 2.Javabean类型获取流程变量 */
+		        System.out.println("variables:"+taskService.getVariables(taskId));//获取map数据
 		        SequenceFlow u = (SequenceFlow) taskService.getVariable(taskId, "用户信息");
 		        System.out.println("loginname:" + u.getCreateLoginName() + " message:" + u.getMessage());
 			}catch(Exception e){
 				//第一次提交没有参数，所以不能正常展示，忽略！
 			}
-			System.out.println("任务名称：" + task.getName()+"vars:"+activitProcessServiceImpl.getVariableByTaskId(task.getId(), true));
+			System.out.println("任务名称：" + task.getName()+"vars:"+activitProcessServiceImpl.getVariableByTaskId(task.getId(), false));
 			String lastTaskName = task.getName();
 			int idx = new Random().nextInt(10);
 			Map<String, Object> variables = new HashMap<String,Object>();
 			variables.put("paramname", "aaaa"+idx);//获取不到
 			 /** 1.使用基本数据类型设置流程变量 **/
-	        taskService.setVariableLocal(taskId, "请假天数", 3); // 与任务ID绑定
+	        taskService.setVariableLocal(taskId, "请假天数", 3); // 没有正确接收！
 	        taskService.setVariable(taskId, "请假日期", new Date());
 	        taskService.setVariable(taskId, "请假原因", "回家养病，大概一周把！");
 	        /** 2.使用Javabean类型设置流程变量 **/
@@ -115,6 +169,7 @@ public class ActivitiSimpleController {
 	        flow.setCreateLoginName("cyb-login");
 	        flow.setMessage("登录参数描述！");
 	        taskService.setVariable(taskId, "用户信息", flow);
+	        taskService.setVariables(taskId, variables);//批量设置，单个设置会汇总成一个map
 			activitProcessServiceImpl.addComment(task.getId(), processId, idx+"审核通过！");
 			activitProcessServiceImpl.complete(task.getId(),variables);
 			task = activitProcessServiceImpl.getTask(processId);

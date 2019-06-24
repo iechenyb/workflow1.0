@@ -7,11 +7,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.activiti.bpmn.model.BpmnModel;
+import org.activiti.engine.FormService;
 import org.activiti.engine.HistoryService;
 import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
+import org.activiti.engine.form.StartFormData;
+import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricTaskInstance;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -41,6 +44,9 @@ public class ActivitProcessServiceImpl {
 	
 	@Autowired
 	protected HistoryService historyService;
+	
+	@Autowired
+	protected FormService formService;
 
 	/**
 	 * 获取流程活动的任务id
@@ -110,9 +116,28 @@ public class ActivitProcessServiceImpl {
 		taskService.complete(taskId, params);
 	}
 
-	public List<Task> getTaskListByGroup(String group) {// management
+
+	public List<Task> getTaskListByCandidateUser(String candidateUser) {// management
+		List<Task> tasks =
+		taskService.createTaskQuery().taskCandidateUser(candidateUser).list();
+		return tasks;
+	}
+	
+	public List<Task> getTaskListByGroup(String group) {
 		List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(group).list();
-		taskService.createTaskQuery().taskAssignee("").list();
+		return tasks;
+	}
+	public List<Task> getTaskListByGroup(List<String> candidateGroups) {
+		List<Task> tasks = taskService.createTaskQuery().taskCandidateGroupIn(candidateGroups).list();
+		return tasks;
+	}
+	/**
+	 * 将指定某人的任务，或者指定候选人或者候选组的任务查询出来
+	 * @param userIdForCandidateAndAssignee
+	 * @return
+	 */
+	public List<Task> getTaskListByAll(String userIdForCandidateAndAssignee) {
+		List<Task> tasks = taskService.createTaskQuery().taskCandidateOrAssigned(userIdForCandidateAndAssignee).list();
 		return tasks;
 	}
 
@@ -227,5 +252,13 @@ public class ActivitProcessServiceImpl {
 				.taskId(taskId)// 使用任务ID查询
 				.singleResult();
 		findCommentByProcId(task.getProcessInstanceId());
+	}
+	
+	public StartFormData getProcessFormData(String processDefinitionId){
+		return formService.getStartFormData(processDefinitionId);
+	}
+	
+	public TaskFormData getTaskFormData(String taskId){
+		return formService.getTaskFormData(taskId);
 	}
 }
