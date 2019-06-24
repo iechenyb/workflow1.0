@@ -1,0 +1,76 @@
+package com.kiiik;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.h2.tools.Server;
+/**
+ *作者 : iechenyb<br>
+ *类描述: 说点啥<br>
+ *创建时间: 2018年5月31日下午1:41:55
+ */
+public class H2Demo {
+	Log log = LogFactory.getLog(H2Demo.class);
+	private Server server;
+	private String port = "6678";//
+	private String dbDir = "~/vasData/apache-tomcat-7.0.56/webapps/VASDataCenter/data/cashDb;mv_store=false";// ./h2db/
+	private String user = "vascenter";
+	private String password = "cesfkiiik";
+
+	public void startServer() {
+		try {
+			System.out.println("正在启动h2...");
+			server = Server.createTcpServer(new String[] { "-tcp", "-tcpAllowOthers", "-tcpPort", port }).start();
+		} catch (SQLException e) {
+			System.out.println("启动h2出错：" + e.toString());
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	}
+
+	public void stopServer() {
+		if (server != null) {
+			System.out.println("正在关闭h2...");
+			server.stop();
+			System.out.println("关闭成功.");
+		}
+	}
+
+	public void useH2() {
+		try {
+			Class.forName("org.h2.Driver");
+			String url = "jdbc:h2:tcp://192.168.108.221:" + port + "/" + dbDir;
+			System.out.println(url);
+			Connection conn = DriverManager.getConnection(url, user,
+					password);
+			Statement stat = conn.createStatement();
+			// insert data
+			//stat.execute("DROP TABLE IF EXISTS TEST");
+			//stat.execute("CREATE TABLE TEST(NAME VARCHAR)");
+			stat.execute("INSERT INTO TEST VALUES('Hello World')");
+			// use data
+			ResultSet result = stat.executeQuery("select name from test ");
+			int i = 1;
+			while (result.next()) {
+				System.out.println(i++ + ":" + result.getString("name"));
+			}
+			result.close();
+			stat.close();
+			conn.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	public static void main(String[] args) {
+		H2Demo h2 = new H2Demo();
+		//h2.startServer();//使用远端服务，不需要启动
+		h2.useH2();
+		// h2.stopServer();
+		System.out.println("==END==");
+	}
+}

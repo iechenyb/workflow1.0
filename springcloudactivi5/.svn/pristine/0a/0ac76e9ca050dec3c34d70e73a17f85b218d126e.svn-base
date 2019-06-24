@@ -1,0 +1,8 @@
+server.port=8888
+spring.application.name=EUREKA-SERVER
+eureka.client.register-with-eureka=false
+eureka.client.fetch-registry=false
+eureka.client.serviceUrl.defaultZone=http://192.168.27.7:${server.port}/eureka/
+eureka.server.enable-self-preservation=true
+eureka.server.eviction-interval-timer-in-ms=4000
+logging.file=${spring.application.name}.log
