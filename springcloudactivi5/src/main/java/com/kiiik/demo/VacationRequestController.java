@@ -1,10 +1,7 @@
 package com.kiiik.demo;
 
-import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.activiti.engine.repository.Deployment;
@@ -13,7 +10,6 @@ import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -161,23 +157,5 @@ public class VacationRequestController {
 		return processId;
 	}
 
-	@GetMapping("/test/picview1/{deployId}/{procId}")
-	@ResponseBody
-	// 这种方法比上面的简单，但是没有上面的灵活
-	public String showImage(@PathVariable(value = "deployId") String deployId,
-			@PathVariable(value = "procId") String procId) throws Exception {
-		System.out.println("**************");
-		String dir = "d:/data/tmp/watch.png";
-		try {
-			// 获取流程定义
-			ProcessDefinition processDefinition =activitProcessServiceImpl.getProcessDefine(deployId);
-			InputStream in = activitProcessServiceImpl.getProcessImage(processDefinition.getId(), procId);
-			FileOutputStream out = new FileOutputStream("d:/data/tmp/watch.png");
-			FileCopyUtils.copy(in, out);
-			return "流程图路径：" + dir;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return "图像生成失败！";
-	}
+	
 }

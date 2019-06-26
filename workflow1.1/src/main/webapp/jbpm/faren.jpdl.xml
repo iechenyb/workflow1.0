@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<process name="faren" xmlns="http://jbpm.org/4.4/jpdl">
+   <start name="start1" g="109,67,96,72">
+      <transition name="法人开户" to="客户支持中心前台岗提交" g="-27,-16"/>
+   </start>
+   <task name="客户支持中心前台岗提交" g="218,55,179,54">
+      <transition to="客户支持中心前台岗复核"/>
+   </task>
+   <task name="客户支持中心前台岗复核" g="487,35,197,59">
+      <transition to="exclusive1"/>
+   </task>
+   <task name="客户支持中心后台岗复核" g="922,249,189,53">
+      <transition to="exclusive3"/>
+   </task>
+   <task name="客户支持中心后台岗审核" g="858,124,215,59">
+      <transition to="exclusive2"/>
+   </task>
+   <task name="客服回访" g="537,285,162,57">
+      <transition name="to 账户通知" to="账户通知" g="-31,-21"/>
+   </task>
+   <task name="账户通知" g="334,302,148,52">
+      <transition to="财务部印签预留"/>
+   </task>
+   <task name="财务部印签预留" g="150,298,134,58">
+      <transition name="完成" to="end1" g="-16,-10"/>
+   </task>
+   <end name="end1" g="118,214,135,43"/>
+   <decision name="exclusive1" g="758,128,36,26">
+      <transition name="通过" to="客户支持中心后台岗审核" g="-14,-11"/>
+      <transition name="退回" to="客户支持中心前台岗提交" g="571,155:15,-15"/>
+   </decision>
+   <decision name="exclusive2" g="1104,63,67,52">
+      <transition to="客户支持中心后台岗复核"/>
+      <transition name="退回" to="客户支持中心前台岗复核" g="-31,-11"/>
+   </decision>
+   <decision name="exclusive3" g="808,276,85,31">
+      <transition name="to 客服回访" to="客服回访" g="-27,-13"/>
+      <transition name="退回" to="客户支持中心后台岗审核" g="-8,-22"/>
+   </decision>
+</process>

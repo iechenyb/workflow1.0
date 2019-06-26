@@ -3,6 +3,7 @@ package com.kiiik.pub;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -107,13 +108,26 @@ public class ActivitProcessServiceImpl {
 	public Task getTask(String processId) {
 		return taskService.createTaskQuery().processInstanceId(processId).singleResult();
 	}
+	public Task getTaskById(String taskId) {
+		return taskService.createTaskQuery().taskId(taskId).singleResult();
+	}
 
 	public void complete(String taskId) {
 		taskService.complete(taskId);
 	}
 
-	public void complete(String taskId, Map<String, Object> params) {
-		taskService.complete(taskId, params);
+	public void complete(String taskId, Map<String, Object> variables) {
+		taskService.setVariables(taskId, variables);
+		taskService.complete(taskId, variables);
+	}
+	public void completeByProcId(String processId, Map<String, Object> variables) {
+		Task task = getTask(processId);
+		taskService.setVariables(task.getId(), variables);
+		taskService.complete(task.getId(), variables);
+	}
+	public void completeByProcId(String processId) {
+		Task task = getTask(processId);
+		taskService.complete(task.getId());
 	}
 
 
@@ -208,8 +222,17 @@ public class ActivitProcessServiceImpl {
 		Authentication.setAuthenticatedUserId("chenyb");
 		taskService.addComment(taskId, processId, message);
 	}
+	public void addCommentByProcId(String processId, String message,String username) {
+		Authentication.setAuthenticatedUserId(username);
+		taskService.addComment(getTask(processId).getId(), processId, message);
+	}
+	public void addComment(String taskId, String processId, String message,String curUser) {
+		Authentication.setAuthenticatedUserId(curUser);
+		taskService.addComment(taskId, processId, message);
+	}
 
-	public void findCommentByProcId(String procId) {
+	public List<Map<String,String>> findCommentByProcId(String procId) {
+		List<Map<String,String>> data = new ArrayList<>();
 		// 获取流程实例ID
 		String processInstanceId = procId;
 		// 使用流程实例ID，查询历史任务，获取历史任务对应的每个任务ID
@@ -228,17 +251,19 @@ public class ActivitProcessServiceImpl {
 			}
 		}
 		list = taskService.getProcessInstanceComments(processInstanceId);
-
+		Map<String,String> map = null;
 		for (Comment com : list) {
-			System.out.println("ID:" + com.getId());
-			System.out.println("Message:" + com.getFullMessage());
-			System.out.println("TaskId:" + com.getTaskId());
-			System.out.println("ProcessInstanceId:" + com.getProcessInstanceId());
-			System.out.println("UserId:" + com.getUserId());//如何存储为用户名
-			System.out.println("time:" + com.getTime());
+			map = new LinkedHashMap<>();
+			map.put("ID" , com.getId());
+			map.put("Message" , com.getFullMessage());
+			map.put("TaskId" , com.getTaskId());
+			map.put("ProcessInstanceId:" , com.getProcessInstanceId());
+			map.put("UserId" , com.getUserId());//如何存储为用户名
+			map.put("time" , com.getTime().toString());
+			data.add(map);
 		}
-
 		System.out.println(list);
+		return data;
 	}
 
 	public void findCommentByTaskId(String taskId) {
@@ -260,5 +285,38 @@ public class ActivitProcessServiceImpl {
 	
 	public TaskFormData getTaskFormData(String taskId){
 		return formService.getTaskFormData(taskId);
+	}
+	
+	/**
+	 * 
+	 * @param taskId
+	 * @return
+	 */
+	public ProcessDefinition getProcessDefinition(String taskId){
+		Task task=taskService.createTaskQuery() // 创建任务查询
+                .taskId(taskId) // 根据任务id查询
+                .singleResult(); 
+        String processDefinitionId=task.getProcessDefinitionId(); // 获取流程定义id
+        ProcessDefinition processDefinition=repositoryService.createProcessDefinitionQuery() // 创建流程定义查询
+                .processDefinitionId(processDefinitionId) // 根据流程定义id查询
+                .singleResult(); 
+        return processDefinition;
+	}
+	
+	public String getDeploymentIdByTaskId(String taskId){
+		return getProcessDefinition(taskId).getDeploymentId();
+	}
+	public String getDeploymentIdByProcId(String processId){
+		return getDeploymentIdByTaskId(getTask(processId).getId());
+	}
+	public ProcessInstance getProcessInstance(String processInstanceId){
+		 ProcessInstance pi=runtimeService.createProcessInstanceQuery() // 根据流程实例id获取流程实例
+	                .processInstanceId(processInstanceId)
+	                .singleResult();
+		 return pi;
+	}
+
+	public ProcessInstance startProcessInstanceByKey(String name, Map<String, Object> map) {
+		return runtimeService.startProcessInstanceByKey(name, map);
 	}
 }

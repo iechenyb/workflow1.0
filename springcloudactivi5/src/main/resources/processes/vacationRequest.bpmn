@@ -30,7 +30,7 @@
     <sequenceFlow id="flow5" name="${!approved}" sourceRef="requestApprovedDecision" targetRef="adjustVacationRequestTask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vacationApproved == 'false'}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="adjustVacationRequestTask" name="部门经理" isForCompensation="true" activiti:assignee="${employeeName}" isForCompensation="true">
+    <userTask id="adjustVacationRequestTask" name="部门经理"  activiti:assignee="${employeeName}" isForCompensation="true">
       <documentation>Your manager has disapproved your vacation request for ${numberOfDays} days.
         Reason: ${managerMotivation}</documentation>
       <extensionElements>
