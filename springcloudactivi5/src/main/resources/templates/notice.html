@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/common">
+
+<div class="centerView" data-type="widgets" th:fragment="content">
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper" id="notice">
+        <div class="row-content am-cf">
+            <div class="row">
+                <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div class="widget am-cf">
+                        <div class="widget-head am-cf">
+                            <div class="widget-title  am-cf">公告板</div>
+                        </div>
+                        <div class="widget-body  am-fr">
+                            <shiro:hasPermission name="notice">
+                            <div class="am-u-sm-12 am-u-md-6 am-u-lg-6">
+                                <div class="am-form-group">
+                                    <div class="am-btn-toolbar">
+                                        <div class="am-btn-group am-btn-group-xs">
+                                            <button type="button" class="am-btn am-btn-default am-btn-success"
+                                                    onclick="javascrtpt:window.location.href='notice_create'">>
+                                                <span class="am-icon-plus"></span> 新增
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </shiro:hasPermission>
+                            <div class="am-u-sm-12">
+                                <table width="100%" class="am-table am-table-compact am-table-striped tpl-table-black "
+                                       id="example-r">
+                                    <thead>
+                                    <tr>
+                                        <th style="text-align: left">标题</th>
+                                        <th style="text-align: left">发送者</th>
+                                        <th style="text-align: left">时间</th>
+                                        <th style="text-align: left">操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody v-if="notices.length == 0">
+                                    <tr>
+                                        <td colspan="6" align="center">暂无数据</td>
+                                    </tr>
+                                    </tbody>
+                                    <tbody v-else>
+                                    <tbody v-for="notice in notices">
+                                    <tr class="gradeX">
+                                    <td>{{notice.title}}</td>
+                                    <td>{{notice.realname}}</td>
+                                    <td>{{notice.create_time}}</td>
+                                        <td>
+                                            <div class="tpl-table-black-operation">
+                                                <a :href="'/projectoa/notice/notice_dtl/'+notice.id">
+                                                    <i class="am-icon-search"></i> 查看
+                                                </a>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <!-- more data -->
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="am-u-lg-12 am-cf" v-if="pageInfo.pages != 1">
+
+                                <div class="am-fr">
+                                    <ul class="am-pagination tpl-pagination">
+
+                                        <li><a v-on:click="getNotices(1)" >首页</a></li>
+
+                                        <li >
+                                            <a v-on:click="getNotices(pageInfo.prePage)" v-if="!pageInfo.isFirstPage">«</a>
+                                            <a v-else>«</a>
+                                        </li>
+
+                                        <!--<li class="am-active"><a href="#">1</a></li>-->
+                                        <li v-for="n in pageInfo.pages" v-if="pageNum != n"><a v-on:click="getNotices(n)">{{n}}</a></li>
+                                        <li class="am-active" v-else><a v-on:click="getNotices(n)">{{n}}</a></li>
+
+                                        <li >
+                                            <a v-on:click="getNotices(pageInfo.nextPage)" v-if="!pageInfo.isLastPage">»</a>
+                                            <a v-else>»</a>
+                                        </li>
+
+                                        <li><a v-on:click="getNotices(pageInfo.pages)" >尾页</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/notice.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#noticeA').attr('class', 'active');
+        });
+    </script>
+</div>
+</html>

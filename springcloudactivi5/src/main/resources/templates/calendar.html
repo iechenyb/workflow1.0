@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/common">
+
+<div class="centerView" data-type="widgets" th:fragment="content">
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper">
+        <div class="row-content am-cf">
+            <div class="tpl-calendar-box">
+                <div id="calendar"></div>
+            </div>
+        </div>
+    </div>
+    <!-- 弹出层 -->
+    <div class="am-modal am-modal-no-btn" id="calendar-edit-box">
+        <div class="am-modal-dialog tpl-model-dialog">
+            <div class="am-modal-hd">
+                <a href="javascript: void(0)" class="am-close edit-box-close am-close-spin"
+                   data-am-modal-close>&times;</a>
+            </div>
+            <div class="am-modal-bd tpl-am-model-bd am-cf">
+
+                <form class="am-form tpl-form-border-form">
+                    <div class="am-form-group am-u-sm-12">
+                        <label for="user-name" class="am-u-sm-12 am-form-label am-text-left">标题 <span
+                                class="tpl-form-line-small-title">Title</span></label>
+                        <div class="am-u-sm-12">
+                            <input type="text" class="tpl-form-input am-margin-top-xs calendar-edit-box-title"
+                                   id="user-name" placeholder="" disabled>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        //这个页面一共也就几句话，就写页面里面了
+        $(document).ready(function () {
+            var calendarData = getCalendarData();
+            if (calendarData == null || calendarData == '') {
+                //初次使用 空的json数组
+                var calendarData = [];
+            }else if(typeof calendarData == 'string'){
+                //类型转换  json string -> json object
+                calendarData = jQuery.parseJSON(calendarData);
+            }
+            var editBox = $('#calendar-edit-box');
+            $('.edit-box-close').on('click', function () {
+                $('#calendar').fullCalendar('unselect');
+            });
+            $('#calendar').fullCalendar({
+                header: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'month,agendaWeek,agendaDay'
+                },
+                monthNames: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                monthNamesShort: ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"],
+                dayNames: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+                dayNamesShort: ["星期日", "星期一", "星期二", "星期三", "星期四", "星期五", "星期六"],
+                today: ["今天"],
+                firstDay: 1,
+                buttonText: {
+                    today: '本月',
+                    month: '月',
+                    week: '周',
+                    day: '日',
+                    prev: '上一月',
+                    next: '下一月'
+                },
+                lang: 'zh-cn',
+                navLinks: true, // can click day/week names to navigate views
+                selectable: true,
+                selectHelper: true,
+                select: function (start, end) {
+                    //弹出框部分
+                    showPrompt('请输入要记录在日历上的日程','记录日程').modal({
+                        onConfirm: function(e) {
+                            if(e&&e.data){
+                                var title = e.data;
+                                var eventData;
+                                if (title) {
+                                    eventData = {
+                                        title: title,
+                                        start: start,
+                                        end: end
+                                    };
+                                    $('#calendar').fullCalendar('renderEvent', eventData, true); // stick? = true
+                                    //同步到redis ID用最后一个的id+1 第一次用没有最后一个 使用 0
+                                    if(calendarData.length > 0)
+                                        eventData.id = calendarData[calendarData.length - 1].id + 1;
+                                    else
+                                        eventData.id = 0;
+                                    calendarData.push(eventData);
+                                    setCalendarData(JSON.stringify(calendarData));
+                                }
+                                $('#calendar').fullCalendar('unselect');
+                            }
+                        }
+                    });
+                },
+                editable: true,
+                eventLimit: true, // allow "more" link when too many events
+                events: calendarData
+            });
+
+        });
+        $('#calendarA').attr('class', 'active');
+
+        function getCalendarData() {
+            var result = "";
+            $.ajax({
+                type: "POST",
+                url: contextPath + "/calendarGetValue",
+                dataType: "json",
+                async: false,//同步
+                cache:false,
+                success: function (data) {
+                    if (data.code == 000)
+                        result = data.value;
+                }
+            });
+            return result;
+        }
+
+        function setCalendarData(calendarData) {
+            $.post(contextPath + "/calendarSetValue", {'value': calendarData});
+        }
+    </script>
+</div>
+
+</html>

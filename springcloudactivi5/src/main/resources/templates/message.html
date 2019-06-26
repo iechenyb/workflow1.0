@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/common">
+
+<div class="centerView" data-type="widgets" th:fragment="content">
+    <!-- 内容区域 -->
+    <div class="tpl-content-wrapper" id="message">
+        <!-- 选项卡 -->
+        <div class="am-tabs" id="messagesTabs">
+            <ul class="am-tabs-nav am-nav am-nav-tabs">
+                <li><a href="">发送站内信</a></li>
+                <!-- 默认使用收件箱标签 -->
+                <li class="am-active"><a href="">收到的站内信</a></li>
+            </ul>
+            <div class="am-tabs-bd">
+                <div class="am-tab-panel">
+                    <div class="row-content am-cf">
+                        <div class="row">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                                <div class="widget am-cf" id="sendBackTable">
+                                    <div class="widget-head am-cf">
+                                        <div class="widget-title am-fl">发送站内信</div>
+                                    </div>
+                                    <div class="widget-body am-fr">
+                                        <form class="am-form tpl-form-border-form tpl-form-border-br">
+                                            <div class="am-form-group">
+                                                <label for="receives" class="am-u-sm-3 am-form-label">收件人</label>
+                                                <div class="am-u-sm-6">
+                                                    <select id="receives" placeholder="请选择你要发给谁，可以多选" multiple
+                                                            data-am-selected style="width: 100%"></select>
+                                                </div>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <label for="messageTitle" class="am-u-sm-3 am-form-label">标题</label>
+                                                <div class="am-u-sm-6">
+                                                    <input type="text" class="tpl-form-input" id="messageTitle"
+                                                           placeholder="请输入标题文字">
+                                                </div>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <label for="messageMain" class="am-u-sm-3 am-form-label">站内信内容</label>
+                                                <div class="am-u-sm-6">
+                                                    <textarea class="" rows="10" id="messageMain"
+                                                              placeholder="请输入要发送的内容"></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="am-form-group">
+                                                <div class="am-u-sm-9 am-u-sm-push-3">
+                                                    <button type="button" onclick="sendMessage()"
+                                                            class="am-btn am-btn-primary tpl-btn-bg-color-success ">提交
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="am-tab-panel am-active">
+                    <div class="row-content am-cf">
+                        <div class="row">
+                            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                                <div class="widget am-cf">
+                                    <div class="widget-head am-cf">
+                                        <div class="widget-title  am-cf">收到的站内信</div>
+                                    </div>
+                                    <div class="widget-body  am-fr">
+                                        <div class="am-u-sm-12">
+                                            <table width="100%"
+                                                   class="am-table am-table-compact am-table-striped tpl-table-black "
+                                                   id="example-r">
+                                                <thead>
+                                                <tr>
+                                                    <th style="text-align: left">信件标题</th>
+                                                    <th style="text-align: left">发送者</th>
+                                                    <th style="text-align: left">时间</th>
+                                                    <th style="text-align: left">操作</th>
+                                                </tr>
+                                                </thead>
+                                                <tbody v-if="messages.length == 0">
+                                                    <tr>
+                                                        <td colspan="6" align="center">暂无数据</td>
+                                                    </tr>
+                                                </tbody>
+                                                <tbody v-else>
+                                                <tr class="gradeX" v-for="message in messages">
+                                                    <td>{{message.title}}</td>
+                                                    <td>{{message.realname}}</td>
+                                                    <td>{{message.create_time}}</td>
+                                                    <td>
+                                                        <div class="tpl-table-black-operation">
+                                                            <a :href="'/projectoa/message/message_dtl/' + message.id">
+                                                                <i class="am-icon-search"></i> 查看
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="am-u-lg-12 am-cf" v-if="pageInfo.pages != 1">
+
+                                            <div class="am-fr">
+                                                <ul class="am-pagination tpl-pagination">
+
+                                                    <li><a v-on:click="getMessages(1)" >首页</a></li>
+
+                                                    <li >
+                                                        <a v-on:click="getMessages(pageInfo.prePage)" v-if="!pageInfo.isFirstPage">«</a>
+                                                        <a v-else>«</a>
+                                                    </li>
+
+                                                    <!--<li class="am-active"><a href="#">1</a></li>-->
+                                                    <li v-for="n in pageInfo.pages" v-if="pageNum != n"><a v-on:click="getMessages(n)">{{n}}</a></li>
+                                                    <li class="am-active" v-else><a v-on:click="getMessages(n)">{{n}}</a></li>
+
+                                                    <li >
+                                                        <a v-on:click="getMessages(pageInfo.nextPage)" v-if="!pageInfo.isLastPage">»</a>
+                                                        <a v-else>»</a>
+                                                    </li>
+
+                                                    <li><a v-on:click="getMessages(pageInfo.pages)" >尾页</a></li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script th:src="@{/js/message.js}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#messageA').attr('class', 'active');
+            $('#messagesTabs').tabs();
+            // 设置参数
+            $('#receives').selected({
+                btnSize: 'sm',
+                btnStyle: 'default',
+                btnWidth: '100%',
+                maxHeight: '350px',
+                searchBox: 1
+            });
+            $('#sendBackTable').css('height',$('#sendBackTable').css('width').replace('px','') / 1.8 );
+        });
+    </script>
+</div>
+
+</html>

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en"
+      xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="common/common">
+
+<div class="centerView" data-type="widgets" th:fragment="content">
+<!-- 内容区域 -->
+<div class="tpl-content-wrapper">
+    <script>
+        // 这个页面有个古怪 在iframe后面的js不执行 所有他放在前面
+        $(document).ready(function () {
+            $('#springbootadminA').attr('class', 'active');
+             var iframeHeight = window.screen.availHeight * 0.9;
+            $('iframe').height(iframeHeight);
+        });
+    </script>
+    <div class="row-content am-cf">
+        <div class="row">
+            <div class="am-u-sm-12 am-u-md-12 am-u-lg-12">
+                    <div style="width:100%;overflow:hidden;border: 8px solid #FFFFFF;">
+                        <iframe th:src="@{/monitor}" style="width: 100%;margin-top: -140px"></iframe>
+                    </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+</html>

@@ -14,9 +14,9 @@ import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
 import org.activiti.engine.TaskService;
-import org.activiti.engine.form.StartFormData;
-import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.impl.form.StartFormDataImpl;
+import org.activiti.engine.impl.form.TaskFormDataImpl;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.repository.Deployment;
@@ -279,12 +279,19 @@ public class ActivitProcessServiceImpl {
 		findCommentByProcId(task.getProcessInstanceId());
 	}
 	
-	public StartFormData getProcessFormData(String processDefinitionId){
-		return formService.getStartFormData(processDefinitionId);
+	public void submitStartFormDataByProcDefId(String processDefinitionId, Map<String,String> properties){
+		formService.submitStartFormData(processDefinitionId, properties);
 	}
-	
-	public TaskFormData getTaskFormData(String taskId){
-		return formService.getTaskFormData(taskId);
+	public void submitStartFormDataByTaskId(String taskId, Map<String,String> properties){
+		formService.submitStartFormData(taskId, properties);
+	}
+	//用于存放业务数据的主键或者部分业务数据
+	public StartFormDataImpl getProcessFormData(String processDefinitionId){
+		return (StartFormDataImpl) formService.getStartFormData(processDefinitionId);
+	}
+	//用于存放上一个任务业务数据的主键或者部分业务数据
+	public TaskFormDataImpl  getTaskFormData(String taskId){
+		return (TaskFormDataImpl) formService.getTaskFormData(taskId);
 	}
 	
 	/**

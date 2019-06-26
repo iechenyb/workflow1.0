@@ -1,23 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html  lang="zh-CN" 
+xmlns:th="http://www.thymeleaf.org"
+>
+<!-- xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+layout:decorator="common/common" -->
 <head>
 <meta charset="UTF-8"></meta>
 <title>thymeleaf学习</title>
-<style type="text/css">
-        table {
-            border: 1px solid black;
-            text-align: center;
-            border-collapse: collapse;
-        }
-        table thead th {
-            border: 1px solid black;
-        }
-        table tbody td {
-            border: 1px solid black;
-        }
-    </style>
+	<link rel="stylesheet"  type="text/css" href="../../css/amazeui.min.css" th:href="@{../../css/amazeui.min.css}"></link>
+	<script th:src="@{../../js/vue.js}"></script>
 </head>
 <body>
+<div class="am-g">
+  <div class="am-u-sm-4">4</div>
+  <div class="am-u-sm-8">8</div>
+</div>
 	静态展示属性：name=<span th:text="${name}"></span>,age=<span th:text="${age}"></span>
 	<hr/>
 	name+age  <span th:text="${name}+${age}"></span>
@@ -30,7 +27,7 @@
 	<li th:each="var:${arr}"><span th:text="${var}"></span></li>	
 	</ul>
 	<hr/>
-	 <table cellpadding="0" cellspacing="0">
+	 <table class="am-table">
         <thead>
             <th>序号</th>
             <th>学生id</th>
@@ -61,5 +58,43 @@
             </tr>
         </tbody>
     </table>
+    <!--  amazeui -->
+    <table class="am-table">
+    <thead>
+        <tr>
+            <th>网站名称</th>
+            <th>网址</th>
+            <th>创建时间</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Amaze UI</td>
+            <td>http://amazeui.org</td>
+            <td>2012-10-01</td>
+        </tr>
+        <tr>
+            <td>Amaze UI</td>
+            <td>http://amazeui.org</td>
+            <td>2012-10-01</td>
+        </tr>
+        <tr class="am-active">
+            <td>Amaze UI(Active)</td>
+            <td>http://amazeui.org</td>
+            <td>2012-10-01</td>
+        </tr>
+        <tr>
+            <td>Amaze UI</td>
+            <td>http://amazeui.org</td>
+            <td>2012-10-01</td>
+        </tr>
+        <tr>
+            <td>Amaze UI</td>
+            <td>http://amazeui.org</td>
+            <td>2012-10-01</td>
+        </tr>
+    </tbody>
+</table>
+    
 </body>
 </html>
