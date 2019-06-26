@@ -127,7 +127,7 @@ public class ActivitProcessServiceImpl {
 		List<Task> tasks = taskService.createTaskQuery().taskCandidateGroup(group).list();
 		return tasks;
 	}
-	public List<Task> getTaskListByGroup(List<String> candidateGroups) {
+	public List<Task> getTaskListInGroup(List<String> candidateGroups) {
 		List<Task> tasks = taskService.createTaskQuery().taskCandidateGroupIn(candidateGroups).list();
 		return tasks;
 	}

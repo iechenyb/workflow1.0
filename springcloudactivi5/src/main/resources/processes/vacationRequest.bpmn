@@ -30,7 +30,7 @@
     <sequenceFlow id="flow5" name="${!approved}" sourceRef="requestApprovedDecision" targetRef="adjustVacationRequestTask">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vacationApproved == 'false'}]]></conditionExpression>
     </sequenceFlow>
-    <userTask id="adjustVacationRequestTask" name="部门经理" activiti:assignee="${employeeName}" isForCompensation="true">
+    <userTask id="adjustVacationRequestTask" name="部门经理" isForCompensation="true" activiti:assignee="${employeeName}" isForCompensation="true">
       <documentation>Your manager has disapproved your vacation request for ${numberOfDays} days.
         Reason: ${managerMotivation}</documentation>
       <extensionElements>
@@ -94,7 +94,7 @@
         <omgdi:waypoint x="282.0" y="30.0"></omgdi:waypoint>
         <omgdi:waypoint x="320.0" y="30.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="220.0" y="49.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="60.0" x="220.0" y="49.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow4" id="BPMNEdge_flow4">
@@ -109,7 +109,7 @@
         <omgdi:waypoint x="282.0" y="190.0"></omgdi:waypoint>
         <omgdi:waypoint x="320.0" y="190.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="209.0" y="169.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="62.0" x="209.0" y="169.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow6" id="BPMNEdge_flow6">
@@ -124,14 +124,14 @@
         <omgdi:waypoint x="139.0" y="341.0"></omgdi:waypoint>
         <omgdi:waypoint x="140.0" y="165.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="310.0" y="349.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="48.0" x="310.0" y="349.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="flow8" id="BPMNEdge_flow8">
         <omgdi:waypoint x="573.0" y="189.0"></omgdi:waypoint>
         <omgdi:waypoint x="652.0" y="189.0"></omgdi:waypoint>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="14.0" width="100.0" x="572.0" y="169.0"></omgdc:Bounds>
+          <omgdc:Bounds height="14.0" width="50.0" x="572.0" y="169.0"></omgdc:Bounds>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
     </bpmndi:BPMNPlane>

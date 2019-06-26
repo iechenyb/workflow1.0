@@ -25,14 +25,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="C:/Users/Administrator/.m2/repository/org/activiti/activiti-image-generator/5.22.0/activiti-image-generator-5.22.0.jar">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-			<attribute name="maven.groupId" value="org.activiti"/>
-			<attribute name="maven.artifactId" value="activiti-image-generator"/>
-			<attribute name="maven.version" value="5.22.0"/>
-			<attribute name="maven.scope" value="compile"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

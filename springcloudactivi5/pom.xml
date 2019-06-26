@@ -19,14 +19,25 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
+		<springfox.version>2.6.1</springfox.version>
 		<activiti.version>5.22.0</activiti.version>
     </properties>
     <dependencies>
+     <dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>${springfox.version}</version>
+		</dependency>
         <!-- 工作流 -->
 	<dependency>
 		<groupId>org.activiti</groupId>
 		<artifactId>activiti-spring-boot-starter-basic</artifactId>
-		<version>5.22.0</version>
+		<version>${activiti.version}</version>
 	</dependency>
 	<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -37,9 +48,15 @@
 			<artifactId>mysql-connector-java</artifactId>
 		</dependency>
 		<!-- Activiti 流程图 -->
+		<!-- activiti-image-generator-5.22.0 -->
         <dependency>
             <groupId>org.activiti</groupId>
             <artifactId>activiti-diagram-rest</artifactId>
+            <version>${activiti.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.activiti</groupId>
+            <artifactId>activiti-image-generator</artifactId>
             <version>${activiti.version}</version>
         </dependency>
         <!-- Activiti 在线设计 -->

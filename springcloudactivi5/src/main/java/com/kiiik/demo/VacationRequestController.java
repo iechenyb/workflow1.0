@@ -36,7 +36,7 @@ public class VacationRequestController {
 	@Autowired
 	ActivitProcessServiceImpl activitProcessServiceImpl;
 
-	@RequestMapping("test/login/{name}")
+	@GetMapping("test/login/{name}")
 	@ResponseBody
 	public String login(@PathVariable String name) {
 		username = name;
@@ -48,7 +48,7 @@ public class VacationRequestController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("test/start")
+	@GetMapping("test/start")
 	@ResponseBody
 	public String startProcess(String bpmnName) {
 		// 根据bpmn文件部署流程
@@ -161,7 +161,7 @@ public class VacationRequestController {
 		return processId;
 	}
 
-	@RequestMapping("/test/picview1/{deployId}/{procId}")
+	@GetMapping("/test/picview1/{deployId}/{procId}")
 	@ResponseBody
 	// 这种方法比上面的简单，但是没有上面的灵活
 	public String showImage(@PathVariable(value = "deployId") String deployId,

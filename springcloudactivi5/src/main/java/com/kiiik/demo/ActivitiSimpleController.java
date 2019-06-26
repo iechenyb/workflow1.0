@@ -3,6 +3,7 @@ package com.kiiik.demo;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.kiiik.bean.SequenceFlow;
 import com.kiiik.pub.ActivitProcessServiceImpl;
+import com.mysql.jdbc.StringUtils;
 
 /**
  * 工作流学习
@@ -42,14 +44,32 @@ public class ActivitiSimpleController {
 	@Autowired
 	ActivitProcessServiceImpl activitProcessServiceImpl;
 
-	@RequestMapping("test/login/{name}")
+	@GetMapping("login/{name}")
 	@ResponseBody
 	public String login(@PathVariable String name) {
 		username = name;
 		return username;
 	}
 	
-	@RequestMapping("task/form/{taskId}")
+	
+	/**
+	 * 流程当前的任务id
+	 * @param processId
+	 * @return
+	 */
+	@GetMapping("taskId/{processId}")
+	@ResponseBody
+	public String getTaskIdByProcessId(@PathVariable String processId) {
+		Task task =  activitProcessServiceImpl.getTask(processId);
+		return task==null?"":task.getId();
+	}
+	
+	/**
+	 * 查询某个任务的表单数据
+	 * @param taskId
+	 * @return
+	 */
+	@GetMapping("task/form/{taskId}")
 	@ResponseBody
 	public String taskForm(@PathVariable String taskId) {
 		TaskFormData tfd = activitProcessServiceImpl.getTaskFormData(taskId);
@@ -67,32 +87,61 @@ public class ActivitiSimpleController {
 		return sb.toString();
 	}
 	/**
-	 * 获取指定角色人员的任务
+	 * 获取指派个单个人员的任务
 	 * @param role
 	 * @return
 	 */
-	@RequestMapping("tasks/role/{role}")
+	@GetMapping("tasks/user/{user}")
 	@ResponseBody
-	public List<String> tasksByRole(@PathVariable String role) {
-		List<Task> tasks= activitProcessServiceImpl.getTaskListByRole(role);
-		List<String> tasksStr = new ArrayList<String>();
-		for(Task task:tasks){
-			tasksStr.add(task.getAssignee()+","+task.getName()+","+task.getFormKey()+","+task.getOwner());
-		}
-		return tasksStr;
+	public List<String> tasksByRole(@PathVariable String user) {
+		List<Task> tasks= activitProcessServiceImpl.getTaskListByRole(user);
+		return commonWrap(tasks);
 	}
 	/**
-	 * 候选人  执行
+	 * 获取指派给候选人执行的任务
 	 * @param role
 	 * @return
 	 */
-	@RequestMapping("tasks/user/{user}")
+	@GetMapping("tasks/candidateuser/{user}")
 	@ResponseBody
-	public List<String> tasksByCondiUser(@PathVariable String user) {
+	public List<String> tasksByCandiUser(@PathVariable String user) {
 		List<Task> tasks= activitProcessServiceImpl.getTaskListByCandidateUser(user);
+		return commonWrap(tasks);
+	}
+	
+	/**
+	 * 获取指派给候选人执行的任务，同时查询多个不行！
+	 * @param role
+	 * @return
+	 */
+	@GetMapping("tasks/candidategroups/{groups}")
+	@ResponseBody
+	public List<String> tasksByCandiGroups(@PathVariable String groups) {
+		List<String> candidateGroups = new ArrayList<>();
+		if(!StringUtils.isNullOrEmpty(groups)){
+			candidateGroups = Arrays.asList(groups);
+		}else{
+			return candidateGroups;
+		}
+		List<Task> tasks= activitProcessServiceImpl.getTaskListInGroup(candidateGroups);
+		return commonWrap(tasks);
+	}
+	/**
+	 * 单个grop查询
+	 * @param group
+	 * @return
+	 */
+	@GetMapping("tasks/candidategroup/{group}")
+	@ResponseBody
+	public List<String> tasksByCandiGroup(@PathVariable String group) {
+		List<Task> tasks= activitProcessServiceImpl.getTaskListByGroup(group);
+		return commonWrap(tasks);
+	}
+	
+	public List<String> commonWrap(List<Task> tasks){
 		List<String> tasksStr = new ArrayList<String>();
 		for(Task task:tasks){
-			tasksStr.add(task.getAssignee()+","+task.getName()+","+task.getFormKey()+","+task.getOwner());
+			tasksStr.add(task.getId()+","+task.getName()+","+task.getProcessInstanceId()+","+task.getDescription());
 		}
 		return tasksStr;
 	}
@@ -103,7 +152,7 @@ public class ActivitiSimpleController {
 	 * 
 	 * @return
 	 */
-	@RequestMapping("test/start")
+	@GetMapping("test/start")
 	@ResponseBody
 	public String startProcess(String bpmnName) {
 		// 根据bpmn文件部署流程
@@ -203,7 +252,7 @@ public class ActivitiSimpleController {
 		return processId;
 	}
 
-	@RequestMapping("/test/picview1/{deployId}/{procId}")
+	@GetMapping("/test/picview1/{deployId}/{procId}")
 	@ResponseBody
 	// 这种方法比上面的简单，但是没有上面的灵活
 	public String showImage(@PathVariable(value = "deployId") String deployId,

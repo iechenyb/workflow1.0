@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.FileCopyUtils;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -62,14 +63,14 @@ public class ActivitiTestController {
 	public static String username = "chenyb";// 当前登录人员
 	// http://localhost:9999/demo/activiti/test
 
-	@RequestMapping("/login/{name}")
+	@GetMapping("/login/{name}")
 	@ResponseBody
 	public String login(@PathVariable String name) {
 		username = name;
 		return username;
 	}
 
-	@RequestMapping("/test")
+	@GetMapping("/test")
 	@ResponseBody
 	public void firstDemo() {
 		// 根据bpmn文件部署流程
@@ -94,7 +95,7 @@ public class ActivitiTestController {
 		System.out.println("task为null，任务执行完毕：" + task);
 	}
 
-	@RequestMapping("/test/{name}")
+	@GetMapping("/test/{name}")
 	@ResponseBody
 	public void firstDemo(@PathVariable String name) {
 		if (StringUtils.isNullOrEmpty(name))
@@ -129,7 +130,7 @@ public class ActivitiTestController {
 	 * @param deployId
 	 * @throws Exception
 	 */
-	@RequestMapping("/test/picview1/{deployId}")
+	@GetMapping("/test/picview1/{deployId}")
 	@ResponseBody
 	public void viewImage(String deployId) throws Exception {
 		// 创建仓库服务对对象
@@ -213,7 +214,7 @@ public class ActivitiTestController {
 		return pd;
 	}
 
-	@RequestMapping("/test/picview2/{deployId}")
+	@GetMapping("/test/picview2/{deployId}")
 	@ResponseBody
 	public String viewImage2(HttpServletResponse resp) {
 		String deploymentId = "";
@@ -236,7 +237,7 @@ public class ActivitiTestController {
 		return null;
 	}
 
-	@RequestMapping("/test/allTask")
+	@GetMapping("/test/allTask")
 	@ResponseBody
 	public List<Task> getCurUserTask() {
 		List<Task> list = taskService.createTaskQuery().taskAssignee(username)// 指定个人任务查询

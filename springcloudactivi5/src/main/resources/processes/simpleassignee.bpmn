@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" typeLanguage="http://www.w3.org/2001/XMLSchema" expressionLanguage="http://www.w3.org/1999/XPath" targetNamespace="http://www.activiti.org/test">
-  <process id="simple" name="simple" isExecutable="true">
+  <process id="simpleassignee" name="simpleassignee" isExecutable="true">
     <startEvent id="startevent1" name="开始">
       <extensionElements>
         <activiti:formProperty id="param1" name="param1" required="true">
@@ -8,14 +8,14 @@
         </activiti:formProperty>
       </extensionElements>
     </startEvent>
-    <userTask id="usertask1" name="上级领导" activiti:assignee="sjld" activiti:candidateUsers="zhangsan,lisi">
+    <userTask id="usertask1" name="上级领导" activiti:assignee="sjld">
       <extensionElements>
         <activiti:formProperty id="sjldid" name="sjldname" required="true">
           <activiti:value id="id1" name="name1"></activiti:value>
         </activiti:formProperty>
       </extensionElements>
     </userTask>
-    <userTask id="usertask2" name="公司领导" activiti:assignee="gsld" activiti:candidateUsers="wangwu,tiedan">
+    <userTask id="usertask2" name="公司领导" activiti:assignee="gsld">
       <extensionElements>
         <activiti:formProperty id="gsldid" name="gsldname">
           <activiti:value id="id2" name="name2"></activiti:value>
@@ -31,8 +31,8 @@
     <sequenceFlow id="flow2" sourceRef="usertask1" targetRef="usertask2"></sequenceFlow>
     <sequenceFlow id="flow3" sourceRef="startevent1" targetRef="usertask1"></sequenceFlow>
   </process>
-  <bpmndi:BPMNDiagram id="BPMNDiagram_simple">
-    <bpmndi:BPMNPlane bpmnElement="simple" id="BPMNPlane_simple">
+  <bpmndi:BPMNDiagram id="BPMNDiagram_simpleassignee">
+    <bpmndi:BPMNPlane bpmnElement="simpleassignee" id="BPMNPlane_simpleassignee">
       <bpmndi:BPMNShape bpmnElement="startevent1" id="BPMNShape_startevent1">
         <omgdc:Bounds height="35.0" width="35.0" x="130.0" y="180.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
