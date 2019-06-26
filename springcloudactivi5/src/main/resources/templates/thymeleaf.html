@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<title>thymeleaf学习</title>
+<style type="text/css">
+        table {
+            border: 1px solid black;
+            text-align: center;
+            border-collapse: collapse;
+        }
+        table thead th {
+            border: 1px solid black;
+        }
+        table tbody td {
+            border: 1px solid black;
+        }
+    </style>
+</head>
+<body>
+	静态展示属性：name=<span th:text="${name}"></span>,age=<span th:text="${age}"></span>
+	<hr/>
+	name+age  <span th:text="${name}+${age}"></span>
+	<hr/>
+	<ul>
+	<li th:each="var:${list}"><span th:text="${var}"></span></li>	
+	</ul>
+	<hr/>
+	<ul>
+	<li th:each="var:${arr}"><span th:text="${var}"></span></li>	
+	</ul>
+	<hr/>
+	 <table cellpadding="0" cellspacing="0">
+        <thead>
+            <th>序号</th>
+            <th>学生id</th>
+            <th>学生姓名</th>
+            <th>学生年龄</th>
+            <th>学生课程-课程列表</th>
+            <th>学生课程-课程分数</th>
+        </thead>
+        <tbody>
+            <tr th:each="entries,stat:${resultList}" th:style="'background-color:'+@{${stat.odd}?'#F2F2F2'}">
+                <td th:text="${stat.count}"></td>
+                <td th:text="${entries['sid']}"></td>
+                <td th:text="${entries['sname']}"></td>
+                <td th:text="${entries['sage']}"></td>
+                <!-- 写法一：
+                <td th:text="${entries['scourse']['cname']}"></td>
+                <td th:text="${entries['scourse']['cscore']}"></td>-->
+                <!-- 写法二：
+                <td th:text="*{entries['scourse']['cname']}"></td>
+                <td th:text="*{entries['scourse']['cscore']}"></td>-->
+                <!-- 写法三：-->
+                <td th:object="${entries['scourse']}">
+                    <span th:text="*{['cname']}"></span>
+                </td>
+                <td th:object="${entries['scourse']}">
+                    <span th:text="*{['cscore']}"></span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

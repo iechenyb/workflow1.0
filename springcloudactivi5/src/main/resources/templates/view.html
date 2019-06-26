@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta charset="UTF-8"></meta>
+<title>流程图查看</title>
+</head>
+<body>
+	<table border='1' style="margin:200px">
+		<tr>
+			<td>流程号</td>
+			<td><span th:text="${proId}"></span></td>
+			<td>当前任务名称</td>
+			<td><span th:text="${taskName}"></span></td>
+		</tr>
+		<tr>
+			<td colspan='4'><img
+				th:src="@{'/leave/activiti/picview2/procId/'+${proId}}"></img></td>
+		</tr>
+	</table>
+</body>
+</html>

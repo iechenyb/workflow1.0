@@ -82,7 +82,81 @@ public class ActivitiBaseController {
 		}
 		return "图像生成失败！";
 	}
+	@GetMapping("/picview3/html/{processId}")
+	@ApiOperation(value = "下载信息", httpMethod = "GET", notes = "下载符合条件的Excel", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	public ModelAndView showImage3(@PathVariable(value = "processId") String processId){
+		ModelAndView aa = new ModelAndView();
+		aa.setViewName("view");
+		aa.addObject("proId", processId);
+		aa.addObject("taskName",activitProcessServiceImpl.getTask(processId).getName());
+		return aa;
+	}
+	@GetMapping(value = "thymeleaf")
+    public String success(Map<String, Object> paramMap) throws FileNotFoundException {
+        /** 默认Map的内容会放大请求域中，页面可以直接取值*/
+        paramMap.put("name", "zhangSan");
+        paramMap.put("age", 28);
+        String[] arr = ResourceUtils.getFile("classpath:").list();
+        paramMap.put("arr",arr);
+        List<String> list = new ArrayList<>();
+        for(int i=0;i<arr.length;i++){
+        	list.add(arr[i]);
+        }
+        paramMap.put("list",list);
+        
+        Map<String,String> map = new HashMap<>();
+        map.put("name", "chenyb");
+        map.put("age", "20");
+        paramMap.put("map",map);
+        
+        
+        List<Map<String, Object>> resultList = new ArrayList<Map<String, Object>>();
+        Map<String, Object> student = new HashMap<String, Object>(){/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
 
+		{
+            put("sid", "101");
+            put("sname", "张三");
+            put("sage", "20");
+            put("scourse", new HashMap<String, String>(){/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+			{
+                put("cname", "语文,数学,英语");
+                put("cscore", "93,95,98");
+            }});
+        }};
+        resultList.add(student);
+        student = new HashMap<String, Object>(){/**
+			 * 
+			 */
+			private static final long serialVersionUID = 1L;
+
+		{
+            put("sid", "102");
+            put("sname", "李四");
+            put("sage", "30");
+            put("scourse", new HashMap<String, String>(){/**
+				 * 
+				 */
+				private static final long serialVersionUID = 1L;
+
+			{
+                put("cname", "物理,化学,生物");
+                put("cscore", "92,93,97");
+            }});
+        }};
+        paramMap.put("resultList", resultList);
+        /** 会自动跳转到默认的 classpath:/templates/view.html 页面*/
+        return "thymeleaf";
+    }
+	
+	// 这种方法比上面的简单，但是没有上面的灵活
+	
 	@GetMapping("/picview2/procId/{processId}")
 	@ResponseBody
 	@ApiOperation(value = "下载信息", httpMethod = "GET", notes = "下载符合条件的Excel", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
