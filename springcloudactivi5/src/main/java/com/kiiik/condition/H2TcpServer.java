@@ -17,7 +17,7 @@ import com.kiiik.ActivitiApplication;
 public class H2TcpServer implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
-    	ActivitiApplication.startH2Server();
+    	new ActivitiApplication().startH2Server();
     }
 }
 

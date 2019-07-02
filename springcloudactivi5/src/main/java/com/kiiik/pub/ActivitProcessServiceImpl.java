@@ -19,6 +19,7 @@ import org.activiti.engine.impl.form.StartFormDataImpl;
 import org.activiti.engine.impl.form.TaskFormDataImpl;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
+import org.activiti.engine.impl.util.CollectionUtil;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
@@ -28,6 +29,7 @@ import org.activiti.engine.task.Task;
 import org.activiti.image.impl.DefaultProcessDiagramGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 @Service
 public class ActivitProcessServiceImpl {
@@ -104,9 +106,34 @@ public class ActivitProcessServiceImpl {
 	public ProcessInstance startProcessInstanceById(String proDefId) {
 		return runtimeService.startProcessInstanceById(proDefId);
 	}
-
+	/*org.activiti.engine.ActivitiException: 
+	 * Query return 2 results instead of max 1
+	 * 返回记录如果大于1，则报错，不友好！
+	 */
+	public Task getSingleTask(String processId) {
+		return taskService.createTaskQuery()
+				.processInstanceId(processId)
+				.singleResult();
+	}
+	/**
+	 * 多人会签时，同一个进程号会有多个任务同时进行，比如wangba和wangjiu
+	 * @param processId
+	 * @return 通用的获取任务方法，获取一个或者多个任务
+	 */
 	public Task getTask(String processId) {
-		return taskService.createTaskQuery().processInstanceId(processId).singleResult();
+		try{
+			//return getSingleTask(processId);
+			List<Task> tasks = taskService.createTaskQuery()
+					.processInstanceId(processId)
+					.list();
+			if(CollectionUtils.isEmpty(tasks)){
+				return null;
+			}
+			return tasks.get(0);
+		}catch(Exception e){
+			return null;
+		}
+		
 	}
 	public Task getTaskById(String taskId) {
 		return taskService.createTaskQuery().taskId(taskId).singleResult();

@@ -14,6 +14,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.activiti.engine.TaskService;
 import org.activiti.engine.form.FormProperty;
 import org.activiti.engine.form.TaskFormData;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
@@ -44,6 +45,9 @@ import io.swagger.annotations.ApiOperation;
 public class ActivitiBaseController {
 	@Autowired
 	ActivitProcessServiceImpl activitProcessServiceImpl;
+	
+	@Autowired
+	TaskService taskService ;
 	public static String username = "chenyuanbao";// 当前登录人员
 
 	@GetMapping("login/{name}")
