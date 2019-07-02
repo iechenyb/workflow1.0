@@ -19,7 +19,6 @@ import org.activiti.engine.impl.form.StartFormDataImpl;
 import org.activiti.engine.impl.form.TaskFormDataImpl;
 import org.activiti.engine.impl.identity.Authentication;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
-import org.activiti.engine.impl.util.CollectionUtil;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
@@ -119,6 +118,7 @@ public class ActivitProcessServiceImpl {
 	 * 多人会签时，同一个进程号会有多个任务同时进行，比如wangba和wangjiu
 	 * @param processId
 	 * @return 通用的获取任务方法，获取一个或者多个任务
+	 * 并行网关有问题：应该获取当前任务的下一个任务，而不是其他任务的下一个任务！！！！
 	 */
 	public Task getTask(String processId) {
 		try{
@@ -133,7 +133,13 @@ public class ActivitProcessServiceImpl {
 		}catch(Exception e){
 			return null;
 		}
-		
+	}
+	
+	public List<Task> getTaskList(String processId){
+		List<Task> tasks = taskService.createTaskQuery()
+				.processInstanceId(processId)
+				.list();
+		return tasks;
 	}
 	public Task getTaskById(String taskId) {
 		return taskService.createTaskQuery().taskId(taskId).singleResult();
@@ -250,8 +256,13 @@ public class ActivitProcessServiceImpl {
 		taskService.addComment(taskId, processId, message);
 	}
 	public void addCommentByProcId(String processId, String message,String username) {
-		Authentication.setAuthenticatedUserId(username);
-		taskService.addComment(getTask(processId).getId(), processId, message);
+		try{
+			Authentication.setAuthenticatedUserId(username);
+			taskService.addComment(getTask(processId).getId(), processId, message);
+		}catch(Exception e){
+			System.out.println("添加注释异常，忽略！");
+			
+		}
 	}
 	public void addComment(String taskId, String processId, String message,String curUser) {
 		Authentication.setAuthenticatedUserId(curUser);

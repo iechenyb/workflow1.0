@@ -92,7 +92,11 @@ public class ActivitiBaseController {
 		ModelAndView aa = new ModelAndView();
 		aa.setViewName("view");
 		aa.addObject("proId", processId);
-		aa.addObject("taskName",activitProcessServiceImpl.getTask(processId).getName());
+		try{
+			aa.addObject("taskName",activitProcessServiceImpl.getTask(processId).getName());
+		}catch(Exception e){
+			aa.addObject("taskName","未知！");
+		}
 		return aa;
 	}
 	@GetMapping(value = "thymeleaf")
