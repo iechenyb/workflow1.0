@@ -61,14 +61,20 @@ public class ActivitiApplication implements CommandLineRunner{
     //@ConditionalOnProperty(name="",havingValue="true")
     public void startH2Server() {
         try {
-        	System.out.println("当前数据库环境是H2，正在启动TCP服务！");
-            Server h2Server = Server.createTcpServer().start();
+        	/*System.out.println("当前数据库环境是H2，正在启动TCP服务！");
+            Server h2Server = //Server.createTcpServer().start();
+            Server.createTcpServer(
+                    new String[] { 
+                    		"-tcp", 
+                    		"-tcpAllowOthers",
+                    		"-tcpPort",
+                             "9092" }).start();//url为tcp协议连接端口，非sever端口8082
             if (h2Server.isRunning(true)) {//如果已经启动，则不再启动！
                 System.out.println("H2 server was started and is running.");
             } else {
                 throw new RuntimeException("Could not start H2 server.");
-            }
-        } catch (SQLException e) {
+            }*/
+        } catch (Exception e) {
             throw new RuntimeException("Failed to start H2 server: ",e);
         }
     }

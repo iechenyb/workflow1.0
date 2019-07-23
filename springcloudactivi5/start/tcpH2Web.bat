@@ -1,0 +1,1 @@
+java -jar h2-1.4.199.jar -web -webPort 8090 -browser  -webAllowOthers
